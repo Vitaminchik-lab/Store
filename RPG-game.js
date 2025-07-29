@@ -1,4 +1,5 @@
-console.log('Happy developing ✨')
+
+// База данных - Места, Враги, Персонаж
 
 const character = {
     name: `character`,
@@ -9,48 +10,92 @@ const character = {
     lvl: 1
 };
 
-const pig = {
-    name: 'Pig',
-    hp: 2,
-    attack: 1,
-    giveExp: 2
+const items = [
+    {name:`svord`, attack: 1},
+    {name: `armor`, hp: 10}
+]
+
+const locations = [
+    {name: `field`},
+    {name: `cave`},
+    {name: `castle`}
+]
+
+let fieldEnemy = [
+    {name: `pig`, hp: 2, attack: 1, giveExp: 1},
+    {name: `pig`, hp: 1, attack: 3, giveExp: 2},
+    {name: `pig`, hp: 2, attack: 4, giveExp: 4}
+];
+
+let caveEnemy = [
+    {name: `goblin`, hp: 3, attack: 3, giveExp: 8},
+    {name: `stoneElement`, hp: 6, attack: 2, giveExp: 8},
+    {name: `ork`, hp: 5, attack: 3, giveExp: 8}
+];
+
+let castleEnemy = [
+    {name: `vampier`, hp: 2, attack: 1, giveExp: 1},
+    {name: `skeletonKing`, hp: 1, attack: 3, giveExp: 2},
+    {name: `lavamonster`, hp: 2, attack: 4, giveExp: 4}
+];
+
+// ------------------------------------------------------------------------------------------------------------------
+
+function selectLocation() {
+    console.log(`Выберите локацию написав`)
+    console.log(`-------------------------------------`)
+    console.log(`"fieldFight()" - это поле`)
+    console.log(`-------------------------------------`)
+    console.log(`caveFight - это пещера`)
+    console.log(`-------------------------------------`)
+    console.log(`castleFight - это замок`)
 };
 
-const characterDeath = (character.hp <= 0)
-const pigDeath = (pig.hp <= 0)
+selectLocation();
 
-console.log(character, pig);
 
-function fight () {
+function fieldFight () {
 
-    character.attack -= pig.hp;
-    character.hp -= pig.attack;
+    function getRandomEnemy() {
+        const randomEnemy = Math.floor(Math.random() * fieldEnemy.length);
+        return fieldEnemy[randomEnemy];
+    }
 
-    if (pigDeath) {
-        character.exp += pig.giveExp;
-        console.log(`${pig.name} храбро пла в бою. Вы получаете ${pig.giveExp} опыта`)
-        return;
+    let activeEnemy = getRandomEnemy();
+
+    console.log(`Враг ${activeEnemy.name} приближается. Его здоровье: ${activeEnemy.hp} , Его атака: ${activeEnemy.attack} !`)
+
+    activeEnemy.hp -= character.attack;
+    character.hp -=  activeEnemy.attack;
+
+    console.log(`Вы нанесли урон ${character.attack}`)
+    console.log(`Вы получили урон ${activeEnemy.attack}`)
+
+    if (activeEnemy.hp <= 0) {
+        character.exp += activeEnemy.giveExp;
+        console.log(`${activeEnemy.name} храбро пла в бою. Вы получаете ${activeEnemy.giveExp} опыта`)
+
+        fieldEnemy = fieldEnemy.filter(myEnemy => myEnemy !== activeEnemy);
+        if (fieldEnemy.length > 0){
+            activeEnemy = getRandomEnemy();
+            console.log(`Новый врг! Его здоровье ${activeEnemy.hp} его атака ${activeEnemy.attack}`)
+        } else {
+            console.log(`Вы победили всех свиней!`)}
+    }
+
+    if (character.exp >= character.lvlUpExp) {
+        lvlUp();
     }
 }
 
-if (characterDeath) {
-    character.exp /= 2;
+if (character.hp <= 0) {
+    character.exp = Math.floor(character.exp / 2);
     console.log(`Вы умерли. И ваш опыт уменьшился в два раза.`)
-}
-
-if (character.exp === character.lvlUpExp) {
-    lvlUp;
 }
 
 function lvlUp () {
     character.lvl += 1;
-
-    if (character.lvl + 1) {
-        const newLvlUpExp= character.lvlupExp *= 2;
-        character.lvlUpExp = newLvlUpExp;
-        return;
-    }
-    console.log(`Ваш уровень вырос. Для достижения следующего уровня вам нужно ${newLvlUpExp} опыта`)
+    character.lvlUpExp *= 2;
+    character.exp = 0;
+    console.log(`Ваш уровень вырос. Для достижения следующего уровня вам нужно ${character.lvlUpExp} опыта`)
 }
-
-console.log(fight)
